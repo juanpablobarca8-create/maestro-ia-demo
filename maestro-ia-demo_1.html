@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo IA — Maestro IA Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b10;
+  --surface: #0f1318;
+  --surface2: #161c24;
+  --border: #1e2733;
+  --accent: #00d4ff;
+  --green: #00e676;
+  --text: #e8edf5;
+  --text-muted: #5a6a7e;
+  --wa-green: #25d366;
+  --wa-out: #005c4b;
+  --wa-in: #1a2633;
+  --wa-bg: #07101a;
+  --wa-header: #182026;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 48px 16px 40px;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 10%, rgba(0,212,255,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 85% 90%, rgba(0,230,118,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(0,100,180,0.04) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+
+.wrap {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 480px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 24px;
+}
+
+.badge {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 13px; border-radius: 100px;
+  border: 1px solid rgba(0,212,255,0.2);
+  background: rgba(0,212,255,0.05);
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent);
+}
+
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: blink 2s infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 7vw, 40px);
+  font-weight: 800; line-height: 1.08;
+  text-align: center; letter-spacing: -0.02em;
+}
+
+h1 em {
+  font-style: normal;
+  background: linear-gradient(120deg, var(--accent) 0%, var(--green) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sub {
+  font-size: 14px; color: var(--text-muted);
+  line-height: 1.65; text-align: center; max-width: 340px;
+}
+
+.sector-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px; width: 100%;
+}
+
+.extra-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.s-btn {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 4px;
+  padding: 10px 6px; border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 500;
+  cursor: pointer; transition: all 0.18s ease;
+  text-align: center; line-height: 1.2;
+}
+
+.s-btn .icon { font-size: 20px; }
+
+.s-btn:hover {
+  border-color: var(--accent); color: var(--text);
+  background: rgba(0,212,255,0.06);
+  transform: translateY(-1px);
+}
+
+.s-btn.active {
+  border-color: var(--accent);
+  background: rgba(0,212,255,0.1);
+  color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(0,212,255,0.15), 0 4px 16px rgba(0,212,255,0.08);
+}
+
+.phone {
+  width: 100%; max-width: 400px;
+  background: var(--wa-bg);
+  border-radius: 20px; overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow:
+    0 0 0 1px rgba(0,212,255,0.06),
+    0 40px 100px rgba(0,0,0,0.7),
+    0 0 80px rgba(0,212,255,0.04);
+  transition: box-shadow 0.4s ease;
+}
+
+.phone:focus-within {
+  box-shadow:
+    0 0 0 1px rgba(0,212,255,0.15),
+    0 40px 100px rgba(0,0,0,0.7),
+    0 0 80px rgba(0,212,255,0.08);
+}
+
+.wa-top {
+  background: var(--wa-header);
+  padding: 13px 16px;
+  display: flex; align-items: center; gap: 11px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, #00b4d8, #00e676);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0; transition: all 0.3s ease;
+}
+
+.wa-info { flex: 1; min-width: 0; }
+
+.wa-biz {
+  font-size: 15px; font-weight: 600; color: #e9edef;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.wa-live {
+  font-size: 11px; color: var(--wa-green);
+  display: flex; align-items: center; gap: 5px; margin-top: 1px;
+}
+
+.wa-live::before {
+  content: '';
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--wa-green); box-shadow: 0 0 4px var(--wa-green);
+  animation: blink 2s infinite;
+}
+
+.msgs {
+  height: 320px; overflow-y: auto;
+  padding: 14px 12px;
+  display: flex; flex-direction: column; gap: 5px;
+  background: var(--wa-bg);
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.012'%3E%3Cpath d='M20 20h4v4h-4zM4 4h4v4H4z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.msgs::-webkit-scrollbar { width: 2px; }
+.msgs::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+
+.bubble {
+  max-width: 80%; padding: 8px 12px 6px;
+  border-radius: 8px;
+  font-size: 13.5px; line-height: 1.52;
+  color: #e9edef;
+  animation: pop 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  word-break: break-word;
+}
+
+@keyframes pop {
+  from { opacity:0; transform: scale(0.94) translateY(6px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+
+.bubble.out { background: var(--wa-out); align-self: flex-end; border-bottom-right-radius: 2px; }
+.bubble.in  { background: var(--wa-in);  align-self: flex-start; border-bottom-left-radius: 2px; }
+
+.btime { font-size: 10px; color: rgba(255,255,255,0.35); text-align: right; margin-top: 2px; }
+
+.typing {
+  background: var(--wa-in); padding: 10px 14px;
+  border-radius: 8px; border-bottom-left-radius: 2px;
+  align-self: flex-start; display: none; gap: 4px; align-items: center;
+}
+
+.typing.on { display: flex; }
+
+.dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.35); animation: tdot 1.3s infinite;
+}
+.dot:nth-child(2) { animation-delay: 0.18s; }
+.dot:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes tdot {
+  0%,60%,100% { transform: translateY(0); opacity:0.35; }
+  30% { transform: translateY(-5px); opacity:1; }
+}
+
+.wa-bar {
+  background: var(--wa-header); padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.wa-inp {
+  flex: 1; background: #1e2d38; border: none; border-radius: 20px;
+  padding: 9px 15px; color: #e9edef;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none;
+}
+
+.wa-inp::placeholder { color: rgba(255,255,255,0.25); }
+
+.send-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--wa-green); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s; flex-shrink: 0;
+}
+
+.send-btn:hover { background: #20c05a; transform: scale(1.06); }
+.send-btn:active { transform: scale(0.94); }
+.send-btn svg { width: 18px; height: 18px; fill: white; }
+
+.qr-wrap {
+  width: 100%; max-width: 400px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+
+.qr {
+  padding: 6px 13px; border-radius: 100px;
+  border: 1px solid rgba(0,212,255,0.25);
+  background: rgba(0,212,255,0.05);
+  color: rgba(0,212,255,0.9);
+  font-size: 12px; cursor: pointer; transition: all 0.18s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.qr:hover { background: rgba(0,212,255,0.12); border-color: var(--accent); }
+
+.bottom-bar {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  width: 100%; max-width: 400px;
+}
+
+.reset {
+  padding: 6px 14px; border-radius: 100px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+  font-size: 12px; cursor: pointer; transition: all 0.18s;
+}
+
+.reset:hover { border-color: #3a4a5e; color: var(--text); }
+
+.powered {
+  font-size: 11px; color: var(--text-muted);
+  opacity: 0.45; display: flex; align-items: center; gap: 5px;
+}
+
+footer { font-size: 11px; color: var(--text-muted); opacity: 0.4; text-align: center; }
+footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="badge"><div class="badge-dot"></div>Demo en vivo</div>
+
+  <h1>Tu negocio,<br>atendido por <em>IA 24/7</em></h1>
+  <p class="sub">Elige tu sector y escribe como lo haría un cliente real. Esto es exactamente lo que vivirán tus clientes.</p>
+
+  <div style="width:100%;max-width:400px;">
+    <div class="sector-grid">
+      <button class="s-btn active" data-s="peluqueria" onclick="pick(this)"><span class="icon">✂️</span>Peluquería</button>
+      <button class="s-btn" data-s="restaurante" onclick="pick(this)"><span class="icon">🍽️</span>Restaurante</button>
+      <button class="s-btn" data-s="dental" onclick="pick(this)"><span class="icon">🦷</span>Clínica</button>
+      <button class="s-btn" data-s="inmobiliaria" onclick="pick(this)"><span class="icon">🏠</span>Inmobiliaria</button>
+      <div class="extra-row">
+        <button class="s-btn" data-s="gimnasio" onclick="pick(this)"><span class="icon">💪</span>Gimnasio</button>
+        <button class="s-btn" data-s="ecommerce" onclick="pick(this)"><span class="icon">🛍️</span>Ecommerce</button>
+        <button class="s-btn" data-s="academia" onclick="pick(this)"><span class="icon">📚</span>Academia</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="phone">
+    <div class="wa-top">
+      <div class="avatar" id="ava">✂️</div>
+      <div class="wa-info">
+        <div class="wa-biz" id="bizName">Peluquería Ámbar</div>
+        <div class="wa-live">Asistente IA · En línea</div>
+      </div>
+    </div>
+    <div class="msgs" id="msgs">
+      <div class="typing" id="typing">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="wa-bar">
+      <input class="wa-inp" id="inp" type="text" placeholder="Escribe un mensaje..." maxlength="220" />
+      <button class="send-btn" onclick="send()">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="qr-wrap" id="qrWrap"></div>
+
+  <div class="bottom-bar">
+    <button class="reset" onclick="reset()">↺ Reiniciar</button>
+    <div class="powered">✦ Powered by Claude AI</div>
+  </div>
+
+  <footer>Demo interactiva por <a href="https://maestroiastudio.es" target="_blank">Maestro IA Studio</a></footer>
+</div>
+
+<script>
+const S = {
+  peluqueria: {
+    name: "Peluquería Ámbar", emoji: "✂️",
+    hello: "¡Hola! 👋 Soy la asistente de *Peluquería Ámbar*. Estoy aquí para ayudarte con reservas, precios o cualquier consulta. ¿En qué puedo ayudarte?",
+    qr: ["¿Cuánto cuesta un tinte?", "Quiero reservar cita", "¿Qué horario tenéis?", "¿Hay lista de espera?"],
+    sys: `Eres la asistente de WhatsApp de "Peluquería Ámbar", peluquería premium en Madrid.
+
+SERVICIOS Y PRECIOS:
+- Corte mujer: desde 28€ | Corte hombre: 18€ | Corte + lavado + peinado: 38€
+- Tinte completo: desde 55€ | Mechas/balayage: desde 75€ | Retoque raíz: 40€
+- Alisado keratina: desde 120€ | Tratamiento nutritivo: 35€
+- Peinado evento: 45€ | Novia: desde 150€
+
+HORARIO: L-V 9:30–20:00 | Sáb 9:00–15:00 | Dom cerrado
+RESERVAS: Por WhatsApp o llamada. Se confirma con 24h antelación.
+CANCELACIONES: Avisar mínimo 4h antes. Sin aviso se pierde el turno.
+LISTA DE ESPERA: Sistema automático — si hay cancelación, WhatsApp avisa al primero de la lista al instante.
+UBICACIÓN: Calle Serrano 72, Madrid. Metro Serrano.
+
+ESTILO: Cercana, profesional, con algún emoji ocasional. Máx 3 frases cortas. Si piden cita, pide día preferido + servicio + nombre.`
+  },
+  restaurante: {
+    name: "Restaurante Casa Tomás", emoji: "🍽️",
+    hello: "¡Buenas! Soy el asistente de *Casa Tomás*. Puedo ayudarte a reservar mesa, consultar el menú o contarte sobre el local. ¿Qué necesitas?",
+    qr: ["Quiero reservar mesa", "¿Tenéis menú del día?", "¿Aceptáis grupos grandes?", "¿Tenéis opciones veganas?"],
+    sys: `Eres el asistente de WhatsApp de "Restaurante Casa Tomás", cocina española tradicional en Barcelona.
+
+INFO:
+- Menú del día (L-V almuerzo): 14€ — 3 platos + bebida + postre
+- Carta media: 30-45€ por persona
+- Horario: Comidas 13:00–16:00 | Cenas 20:30–23:30 | Lunes cerrado
+- Reservas: Necesarias para cenas y fines de semana. Grupos +8 con señal.
+- Opciones veganas y sin gluten disponibles (indicar al reservar)
+- Terraza: Sí, calefactores en invierno. Aforo 20 personas.
+- Eventos y celebraciones privadas desde 15 personas
+
+ESTILO: Cálido, acogedor. Máx 3 frases. Para reserva pide: día, hora, nº personas y nombre.`
+  },
+  dental: {
+    name: "Clínica Dental Novadent", emoji: "🦷",
+    hello: "Hola, soy el asistente de *Clínica Novadent*. Disponible 24/7 para ayudarte. ¿Tienes alguna consulta o quieres pedir cita?",
+    qr: ["¿Cuánto cuesta una limpieza?", "Quiero pedir cita", "Tengo dolor urgente", "¿Trabajáis con seguros?"],
+    sys: `Eres el asistente de WhatsApp de "Clínica Dental Novadent", Valencia.
+
+PRECIOS:
+- Revisión inicial: GRATUITA | Limpieza: 65€ | Limpieza profunda: 120€
+- Empaste: desde 70€ | Endodoncia: desde 280€
+- Extracción simple: 80€ | Muela del juicio: desde 180€
+- Ortodoncia invisible: desde 2.800€ | Blanqueamiento clínica: 250€
+- Implante completo: desde 950€
+
+HORARIO: L-V 9:00–21:00 | Sáb 9:00–14:00
+URGENCIAS: Atención mismo día antes de las 15:00
+SEGUROS: Adeslas, Asisa, Sanitas, DKV, Mapfre
+FINANCIACIÓN: Sin intereses hasta 12 meses
+
+ESTILO: Profesional y empático. Máx 3 frases. Para urgencia ofrece cita inmediata. Para reserva pide nombre, servicio y horario preferido.`
+  },
+  inmobiliaria: {
+    name: "Inmobiliaria Urbe Madrid", emoji: "🏠",
+    hello: "Hola, soy el asistente de *Urbe Madrid*. Puedo ayudarte a encontrar piso, resolver dudas sobre alquileres o ventas. ¿Qué estás buscando?",
+    qr: ["Busco piso en alquiler", "Quiero vender mi casa", "¿Cuáles son vuestros honorarios?", "¿Cómo funciona la valoración?"],
+    sys: `Eres el asistente de WhatsApp de "Urbe Madrid", agencia inmobiliaria en Madrid capital.
+
+SERVICIOS:
+- Alquiler: gestión completa — selección inquilinos, contrato, seguimiento
+- Venta: valoración gratuita, fotografía profesional, publicación en portales, negociación
+- Honorarios venta: 3% del precio + IVA (mínimo 4.500€)
+- Honorarios alquiler propietario: 1 mes de alquiler + IVA (solo si se alquila)
+- Para el inquilino: GRATIS
+
+ZONAS: Salamanca, Chamberí, Retiro, Centro, Chamartín, Moncloa
+ALQUILERES: 900€–3.500€/mes según zona y tamaño
+VENTA: desde 250.000€ hasta 2.5M€
+
+ESTILO: Profesional y directo. Máx 3 frases. Para alquiler pide zona, presupuesto y nº habitaciones. Para venta pide dirección aproximada.`
+  },
+  gimnasio: {
+    name: "Gimnasio FORMA", emoji: "💪",
+    hello: "¡Hola! 💪 Soy el asistente de *Gimnasio FORMA*. ¿Quieres saber sobre tarifas, clases o hacer una prueba gratuita?",
+    qr: ["¿Cuánto cuesta la cuota?", "Quiero una prueba gratis", "¿Qué clases hay?", "¿Tenéis entrenador personal?"],
+    sys: `Eres el asistente de WhatsApp de "Gimnasio FORMA", gimnasio boutique premium en Bilbao.
+
+TARIFAS:
+- Mensual: 49€ | Trimestral: 129€ | Anual: 420€ (35€/mes)
+- Día suelto: 10€ | Pack 10 accesos: 85€
+- Estudiantes y +65: 15% descuento con carnet
+- Prueba gratuita: 1 semana completa para nuevos socios (con cita previa)
+
+CLASES (incluidas): Yoga, Pilates, Spinning, HIIT, Box Fitness, Body Pump, Stretching
+Horario clases: 7:00–22:00 L-V | 9:00–15:00 fines de semana
+
+ENTRENADOR PERSONAL: Sesión 60 min: 40€ | Bono 10 sesiones: 350€
+INSTALACIONES: Cardio, pesas, 3 salas de clases, sauna, vestuarios premium
+
+ESTILO: Energético y motivador. Máx 3 frases. Siempre ofrece la semana de prueba gratuita a nuevos socios.`
+  },
+  ecommerce: {
+    name: "Tienda Raíz Natural", emoji: "🛍️",
+    hello: "¡Hola! Bienvenido/a a *Raíz Natural* 🌿 Cosmética y alimentación ecológica. ¿Tienes alguna duda sobre tu pedido?",
+    qr: ["¿Cuándo llega mi pedido?", "¿Tenéis descuento bienvenida?", "¿Aceptáis devoluciones?", "¿Enviáis a Canarias?"],
+    sys: `Eres el asistente de WhatsApp de "Raíz Natural", tienda online de cosmética y alimentación natural ecológica.
+
+ENVÍOS:
+- Península: gratis desde 35€ | por debajo: 3,95€ | 1-3 días hábiles
+- Express 24h: 6,95€ (pedir antes de 14:00)
+- Baleares: 5,95€ | 3-5 días | Canarias: 7,95€ | 5-8 días
+- Internacional UE: desde 9,95€ | 4-7 días
+
+DEVOLUCIONES: 30 días sin preguntas. Gratis si el producto viene defectuoso.
+
+DESCUENTOS:
+- Bienvenida: 12% con código RAIZ12 (primera compra)
+- Carrito abandonado: 10% automático si lleva +24h sin completar
+- Newsletter: 8% permanente | Programa fidelidad: puntos por compra
+
+PAGO: Tarjeta, Bizum, PayPal, Klarna (3 plazos sin intereses)
+
+ESTILO: Cercano y natural. Máx 3 frases. Para incidencias pedir número de pedido (#XXXXX).`
+  },
+  academia: {
+    name: "Academia Élite Idiomas", emoji: "📚",
+    hello: "¡Hola! Soy el asistente de *Academia Élite Idiomas*. Podemos ayudarte con cursos, precios y pruebas de nivel. ¿Qué idioma te interesa?",
+    qr: ["¿Cuánto cuesta inglés?", "Quiero prueba de nivel gratis", "¿Tenéis clases online?", "Preparación Cambridge"],
+    sys: `Eres el asistente de WhatsApp de "Academia Élite Idiomas", Sevilla — modalidad presencial y online.
+
+IDIOMAS: Inglés, Francés, Alemán, Italiano, Portugués, Chino, Japonés, Árabe
+
+PRECIOS (inglés, similar en otros):
+- Grupo reducido (máx 6): 80€/mes | 2 clases/semana
+- Semi-intensivo: 130€/mes | 4 clases/semana
+- Intensivo: 220€/mes | todos los días
+- Clases particulares: 25€/hora | Pack 10h: 220€
+- Online: mismo precio, clases en vivo por videollamada
+
+EXÁMENES: Cambridge A2-C2, DELF/DALF, Goethe, DELE — preparación incluida
+PRUEBA DE NIVEL: Gratuita, 15 min, presencial u online — necesaria para matricularse
+NIÑOS: Grupos desde 5 años. Desde 65€/mes
+EMPRESAS: In-company y bonificable por FUNDAE
+
+ESTILO: Profesional y motivador. Máx 3 frases. Para matrícula pide idioma, nivel aproximado y modalidad.`
+  }
+};
+
+let cur = 'peluqueria', hist = [], busy = false;
+
+function now() {
+  const d = new Date();
+  return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+}
+
+function pick(btn) {
+  document.querySelectorAll('.s-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  cur = btn.dataset.s;
+  reset();
+}
+
+function reset() {
+  const s = S[cur];
+  hist = [];
+  document.getElementById('ava').textContent = s.emoji;
+  document.getElementById('bizName').textContent = s.name;
+  const m = document.getElementById('msgs');
+  const t = document.getElementById('typing');
+  m.innerHTML = '';
+  m.appendChild(t);
+  addMsg('in', s.hello);
+  const qw = document.getElementById('qrWrap');
+  qw.innerHTML = '';
+  s.qr.forEach(q => {
+    const b = document.createElement('button');
+    b.className = 'qr'; b.textContent = q;
+    b.onclick = () => { document.getElementById('inp').value = q; send(); };
+    qw.appendChild(b);
+  });
+}
+
+function addMsg(dir, text) {
+  const m = document.getElementById('msgs');
+  const t = document.getElementById('typing');
+  const d = document.createElement('div');
+  d.className = `bubble ${dir}`;
+  const html = text.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+  d.innerHTML = html + `<div class="btime">${now()}</div>`;
+  m.insertBefore(d, t);
+  m.scrollTop = m.scrollHeight;
+}
+
+function showTyping(v) {
+  document.getElementById('typing').className = v ? 'typing on' : 'typing';
+  if (v) document.getElementById('msgs').scrollTop = 99999;
+}
+
+async function send() {
+  if (busy) return;
+  const inp = document.getElementById('inp');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = '';
+  addMsg('out', txt);
+  hist.push({ role: 'user', content: txt });
+  busy = true; showTyping(true);
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: S[cur].sys,
+        messages: hist
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Disculpa, ha habido un error. Inténtalo de nuevo.';
+    hist.push({ role: 'assistant', content: reply });
+    await new Promise(r => setTimeout(r, 500 + Math.random() * 400));
+    showTyping(false);
+    addMsg('in', reply);
+  } catch(e) {
+    showTyping(false);
+    addMsg('in', 'Parece que hay un problema de conexión. Inténtalo en unos segundos 🙏');
+  }
+  busy = false;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('inp').addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+  reset();
+});
+</script>
+</body>
+</html>
