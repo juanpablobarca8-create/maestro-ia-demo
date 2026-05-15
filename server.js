@@ -1,4 +1,3 @@
-// ============================================================
 //  Maestro IA Studio — Servidor proxy (OpenAI)
 //  Requisitos: Node.js 18+
 //  Instalación: npm install express cors
@@ -20,7 +19,7 @@ if (!KEY) {
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.'));
+app.use(express.static(__dirname));
 
 // ── Ruta proxy ──────────────────────────────────────────────
 app.post('/api/chat', (req, res) => {
