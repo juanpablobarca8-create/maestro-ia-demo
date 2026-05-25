@@ -297,6 +297,465 @@ h1 em {
 
 footer { font-size: 11px; color: var(--text-muted); opacity: 0.4; text-align: center; }
 footer a { color: var(--accent); text-decoration: none; }
+
+/* ─── REAL ESTATE PREMIUM SECTION ─── */
+
+.section-sep {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; max-width: 860px;
+  padding: 64px 20px 0;
+}
+.section-sep-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.18), transparent);
+}
+.section-sep-tag {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--text-muted); opacity: 0.5;
+  white-space: nowrap;
+}
+
+.realestate-section {
+  width: 100%;
+  padding: 72px 20px 100px;
+  position: relative; z-index: 1;
+}
+
+.realestate-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(0,100,220,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.rs-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 44px;
+}
+
+.rs-badge {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 14px; border-radius: 100px;
+  border: 1px solid rgba(0,212,255,0.25);
+  background: rgba(0,212,255,0.07);
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rs-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(26px, 4.5vw, 44px);
+  font-weight: 800; line-height: 1.1;
+  text-align: center; letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.rs-title em {
+  font-style: normal;
+  background: linear-gradient(120deg, var(--accent) 0%, #4d8cff 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rs-sub {
+  font-size: 15px; color: var(--text-muted);
+  line-height: 1.65; text-align: center; max-width: 500px;
+}
+
+/* Cards */
+.rs-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px; width: 100%;
+}
+
+.rs-card {
+  position: relative; overflow: hidden;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(0,212,255,0.1);
+  border-radius: 22px;
+  padding: 36px 28px 32px;
+  display: flex; flex-direction: column; gap: 16px;
+  transition: border-color 0.25s, transform 0.28s, box-shadow 0.28s;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+
+.rs-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.3), transparent);
+}
+
+.rs-card:hover {
+  border-color: rgba(0,212,255,0.32);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px rgba(0,212,255,0.07), 0 0 0 1px rgba(0,212,255,0.12);
+}
+
+.rs-card-icon {
+  width: 50px; height: 50px; border-radius: 14px;
+  background: rgba(0,212,255,0.07);
+  border: 1px solid rgba(0,212,255,0.18);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; transition: transform 0.25s;
+}
+
+.rs-card:hover .rs-card-icon { transform: scale(1.08); }
+
+.rs-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text); line-height: 1.3;
+}
+
+.rs-card p {
+  font-size: 13px; color: var(--text-muted); line-height: 1.6; flex: 1;
+}
+
+/* Flow */
+.rs-flow-wrap {
+  width: 100%;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(0,212,255,0.1);
+  border-radius: 24px;
+  padding: 44px 40px 40px;
+  position: relative; overflow: hidden;
+}
+
+.rs-flow-wrap::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.25), transparent);
+}
+
+.rs-flow-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--text-muted); opacity: 0.45;
+  text-align: center; margin-bottom: 40px;
+}
+
+.rs-flow {
+  display: flex; align-items: flex-start;
+  justify-content: center; gap: 0;
+  overflow-x: auto; padding-bottom: 4px;
+}
+
+.rs-flow::-webkit-scrollbar { height: 2px; }
+.rs-flow::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.2); border-radius: 2px; }
+
+.rs-fnode {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 14px; flex-shrink: 0;
+}
+
+.rs-ficon {
+  width: 70px; height: 70px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; position: relative;
+  border: 1px solid rgba(0,212,255,0.2);
+  background: rgba(0,212,255,0.07);
+  transition: transform 0.25s;
+}
+
+.rs-ficon::after {
+  content: '';
+  position: absolute; inset: -5px; border-radius: 50%;
+  border: 1px solid rgba(0,212,255,0.1);
+}
+
+.rs-fnode:hover .rs-ficon { transform: scale(1.1); }
+
+.rs-fnode:nth-child(3) .rs-ficon { background: rgba(37,211,102,0.08); border-color: rgba(37,211,102,0.25); }
+.rs-fnode:nth-child(5) .rs-ficon { background: rgba(255,153,0,0.08); border-color: rgba(255,153,0,0.25); }
+.rs-fnode:nth-child(7) .rs-ficon { background: rgba(140,80,255,0.08); border-color: rgba(140,80,255,0.25); }
+
+.rs-fnode span {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-muted); white-space: nowrap;
+}
+
+.rs-fline {
+  flex: 1; min-width: 36px; max-width: 100px;
+  height: 2px; border-radius: 2px;
+  background: rgba(0,212,255,0.12);
+  position: relative; overflow: hidden;
+  align-self: flex-start; margin-top: 35px;
+  flex-shrink: 1;
+}
+
+.rs-fline::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0;
+  width: 45%; left: -45%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  animation: rsFLow 2s ease-in-out infinite;
+}
+
+.rs-fline:nth-child(2)::after { animation-delay: 0s; }
+.rs-fline:nth-child(4)::after { animation-delay: 0.5s; }
+.rs-fline:nth-child(6)::after { animation-delay: 1.0s; }
+.rs-fline:nth-child(8)::after { animation-delay: 1.5s; }
+
+@keyframes rsFLow {
+  0%   { left: -45%; }
+  100% { left: 100%; }
+}
+
+/* Node pulse animations */
+.rs-fnode:nth-child(1) .rs-ficon { animation: rsPulse1 3s 0.0s infinite; }
+.rs-fnode:nth-child(3) .rs-ficon { animation: rsPulse2 3s 0.6s infinite; }
+.rs-fnode:nth-child(5) .rs-ficon { animation: rsPulse3 3s 1.2s infinite; }
+.rs-fnode:nth-child(7) .rs-ficon { animation: rsPulse4 3s 1.8s infinite; }
+.rs-fnode:nth-child(9) .rs-ficon { animation: rsPulse1 3s 2.4s infinite; }
+
+@keyframes rsPulse1 { 0%{box-shadow:0 0 0 0 rgba(0,212,255,0.3)} 70%{box-shadow:0 0 0 9px rgba(0,212,255,0)} 100%{box-shadow:0 0 0 0 rgba(0,212,255,0)} }
+@keyframes rsPulse2 { 0%{box-shadow:0 0 0 0 rgba(37,211,102,0.3)} 70%{box-shadow:0 0 0 9px rgba(37,211,102,0)} 100%{box-shadow:0 0 0 0 rgba(37,211,102,0)} }
+@keyframes rsPulse3 { 0%{box-shadow:0 0 0 0 rgba(255,153,0,0.3)} 70%{box-shadow:0 0 0 9px rgba(255,153,0,0)} 100%{box-shadow:0 0 0 0 rgba(255,153,0,0)} }
+@keyframes rsPulse4 { 0%{box-shadow:0 0 0 0 rgba(140,80,255,0.3)} 70%{box-shadow:0 0 0 9px rgba(140,80,255,0)} 100%{box-shadow:0 0 0 0 rgba(140,80,255,0)} }
+
+/* CTA */
+.rs-cta {
+  padding: 16px 48px;
+  background: linear-gradient(135deg, #00d4ff 0%, #006bcc 100%);
+  border: none; border-radius: 50px;
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 700; letter-spacing: 0.05em;
+  color: #000; cursor: pointer;
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 30px rgba(0,212,255,0.35), 0 4px 24px rgba(0,0,0,0.35);
+  transition: transform 0.22s, box-shadow 0.22s;
+}
+
+.rs-cta::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.28) 50%, transparent 100%);
+  animation: rsShimmer 2.8s infinite;
+}
+
+@keyframes rsShimmer { 0%{left:-100%} 55%,100%{left:100%} }
+
+.rs-cta:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 55px rgba(0,212,255,0.55), 0 10px 32px rgba(0,0,0,0.35);
+}
+
+.rs-cta:active { transform: scale(0.97); }
+
+/* Scroll-in animations */
+.rs-anim {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.rs-anim.rs-in { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media (max-width: 720px) {
+  .rs-cards { grid-template-columns: 1fr; }
+  .rs-flow-wrap { padding: 20px 14px 18px; }
+}
+
+/* ─── DEMO MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1; pointer-events: all;
+}
+
+.modal-box {
+  position: relative;
+  width: 100%; max-width: 420px;
+  background: #0d1520;
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 24px;
+  padding: 44px 36px 40px;
+  display: flex; flex-direction: column; gap: 16px;
+  box-shadow: 0 0 0 1px rgba(0,212,255,0.06), 0 40px 100px rgba(0,0,0,0.7), 0 0 80px rgba(0,212,255,0.06);
+  transform: translateY(16px);
+  transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.modal-overlay.open .modal-box { transform: translateY(0); }
+
+.modal-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent);
+}
+
+.modal-close {
+  position: absolute; top: 16px; right: 18px;
+  background: none; border: none;
+  color: var(--text-muted); font-size: 16px;
+  cursor: pointer; padding: 4px 8px; border-radius: 6px;
+  transition: color 0.18s, background 0.18s;
+}
+.modal-close:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px; font-weight: 800;
+  line-height: 1.15; letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.modal-title em {
+  font-style: normal;
+  background: linear-gradient(120deg, var(--accent), #4d8cff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.modal-sub {
+  font-size: 13px; color: var(--text-muted); line-height: 1.6;
+}
+
+.modal-form { display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+
+.modal-field { display: flex; flex-direction: column; gap: 6px; }
+
+.modal-field label {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.modal-field input {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 13px 16px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.modal-field input::placeholder { color: var(--text-muted); opacity: 0.5; }
+
+.modal-field input:focus {
+  border-color: rgba(0,212,255,0.45);
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+}
+
+.modal-submit {
+  margin-top: 6px;
+  padding: 15px;
+  background: linear-gradient(135deg, #00d4ff 0%, #006bcc 100%);
+  border: none; border-radius: 50px;
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700; letter-spacing: 0.04em;
+  color: #000; cursor: pointer;
+  box-shadow: 0 0 24px rgba(0,212,255,0.3);
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  position: relative; overflow: hidden;
+}
+
+.modal-submit::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  animation: rsShimmer 2.8s infinite;
+}
+
+.modal-submit:hover { transform: translateY(-1px); box-shadow: 0 0 40px rgba(0,212,255,0.45); }
+.modal-submit:active { transform: scale(0.97); }
+.modal-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.modal-success {
+  display: none; flex-direction: column;
+  align-items: center; gap: 14px;
+  padding: 24px 0 8px; text-align: center;
+}
+
+.modal-success-icon {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: rgba(0,230,118,0.1);
+  border: 1px solid rgba(0,230,118,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; color: var(--green);
+  box-shadow: 0 0 20px rgba(0,230,118,0.2);
+  animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.modal-success p {
+  font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+  color: var(--text);
+}
+
+.modal-success span {
+  font-size: 13px; color: var(--text-muted); line-height: 1.6;
+}
+
+/* ─── SERVICES NAV ─── */
+html { scroll-behavior: smooth; }
+
+.services-nav {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; justify-content: center;
+  width: 100%; max-width: 400px;
+}
+
+.svc-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 18px; border-radius: 100px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.svc-pill:hover {
+  border-color: rgba(0,212,255,0.35);
+  color: var(--accent);
+  background: rgba(0,212,255,0.06);
+  transform: translateY(-1px);
+}
+
+#chatbots, #webs { scroll-margin-top: 32px; }
+
+/* ─── WEB SECTION ─── */
+.web-section {
+  width: 100%;
+  padding: 72px 20px 100px;
+  position: relative; z-index: 1;
+}
+
+.web-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(60,80,255,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .web-section { padding: 48px 16px 72px; }
+}
 </style>
 </head>
 <body>
@@ -306,6 +765,11 @@ footer a { color: var(--accent); text-decoration: none; }
 
   <h1>Tu negocio,<br>atendido por <em>IA 24/7</em></h1>
   <p class="sub">Elige tu sector y escribe como lo haría un cliente real. Esto es exactamente lo que vivirán tus clientes.</p>
+
+  <div class="services-nav">
+    <a href="#chatbots" class="svc-pill">🤖 Chatbots IA</a>
+    <a href="#webs" class="svc-pill">🌐 Webs a medida</a>
+  </div>
 
   <div style="width:100%;max-width:400px;">
     <div class="sector-grid">
@@ -350,6 +814,187 @@ footer a { color: var(--accent); text-decoration: none; }
   </div>
 
   <footer>Demo interactiva por <a href="https://maestroiastudio.es" target="_blank">Maestro IA Studio</a></footer>
+</div>
+
+<!-- ─── SEPARADOR ─── -->
+<div class="section-sep" id="chatbots">
+  <div class="section-sep-line"></div>
+  <div class="section-sep-tag">Automatización Premium</div>
+  <div class="section-sep-line"></div>
+</div>
+
+<!-- ─── SECCIÓN INMOBILIARIA PREMIUM ─── -->
+<section class="realestate-section">
+  <div class="rs-wrap">
+
+    <div class="badge rs-anim">
+      <div class="badge-dot"></div>
+      Caso de uso real
+    </div>
+
+    <h2 class="rs-title rs-anim">Automatización IA para<br><em>Inmobiliarias</em></h2>
+    <p class="rs-sub rs-anim">Captura leads automáticamente desde WhatsApp y responde en segundos con IA.</p>
+
+    <div class="rs-cards">
+      <div class="rs-card rs-anim">
+        <div class="rs-card-icon">📥</div>
+        <h3>Captura automática de leads</h3>
+        <p>Cada mensaje de WhatsApp se convierte en un lead registrado al instante en tu CRM, sin intervención manual.</p>
+      </div>
+      <div class="rs-card rs-anim">
+        <div class="rs-card-icon">⚡</div>
+        <h3>Respuesta IA instantánea</h3>
+        <p>La IA contesta en segundos con información personalizada sobre propiedades, precios y disponibilidad.</p>
+      </div>
+      <div class="rs-card rs-anim">
+        <div class="rs-card-icon">🗓️</div>
+        <h3>Seguimiento automático de visitas</h3>
+        <p>Agenda visitas, envía recordatorios y hace seguimiento post-visita completamente en automático.</p>
+      </div>
+    </div>
+
+    <div class="rs-flow-wrap rs-anim">
+      <div class="rs-flow-label">Flujo de automatización</div>
+      <div class="rs-flow">
+        <div class="rs-fnode">
+          <div class="rs-ficon">👤</div>
+          <span>Cliente</span>
+        </div>
+        <div class="rs-fline"></div>
+        <div class="rs-fnode">
+          <div class="rs-ficon">💬</div>
+          <span>WhatsApp</span>
+        </div>
+        <div class="rs-fline"></div>
+        <div class="rs-fnode">
+          <div class="rs-ficon">⚙️</div>
+          <span>Make</span>
+        </div>
+        <div class="rs-fline"></div>
+        <div class="rs-fnode">
+          <div class="rs-ficon">🤖</div>
+          <span>IA</span>
+        </div>
+        <div class="rs-fline"></div>
+        <div class="rs-fnode">
+          <div class="rs-ficon">🗂️</div>
+          <span>CRM</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="rs-cta rs-anim" onclick="openDemoModal()">✦ Solicitar demo</button>
+
+  </div>
+</section>
+
+<!-- ─── SEPARADOR WEBS ─── -->
+<div class="section-sep" id="webs">
+  <div class="section-sep-line"></div>
+  <div class="section-sep-tag">Webs a medida</div>
+  <div class="section-sep-line"></div>
+</div>
+
+<!-- ─── SECCIÓN PÁGINAS WEB A MEDIDA ─── -->
+<section class="web-section">
+  <div class="rs-wrap">
+
+    <div class="badge rs-anim">
+      <div class="badge-dot"></div>
+      Webs a medida + SEO
+    </div>
+
+    <h2 class="rs-title rs-anim">Páginas web a medida para<br><em>negocios que quieren crecer</em></h2>
+    <p class="rs-sub rs-anim">Diseñamos webs modernas, rápidas y optimizadas para convertir visitas en clientes.</p>
+
+    <div class="rs-cards">
+      <div class="rs-card rs-anim">
+        <div class="rs-card-icon">🎨</div>
+        <h3>Diseño web a medida</h3>
+        <p>Webs únicas, profesionales y adaptadas a cada negocio. Sin plantillas genéricas ni diseños repetidos.</p>
+      </div>
+      <div class="rs-card rs-anim">
+        <div class="rs-card-icon">🔍</div>
+        <h3>SEO técnico</h3>
+        <p>Optimización desde la base para mejorar visibilidad en Google y atraer tráfico orgánico cualificado.</p>
+      </div>
+      <div class="rs-card rs-anim">
+        <div class="rs-card-icon">📱</div>
+        <h3>Web responsive</h3>
+        <p>Diseño perfecto para móvil, tablet y ordenador. La mayoría de visitas llegan desde el teléfono.</p>
+      </div>
+      <div class="rs-card rs-anim">
+        <div class="rs-card-icon">🤖</div>
+        <h3>Integración con WhatsApp y chatbots IA</h3>
+        <p>Conectamos la web con automatizaciones inteligentes para capturar y atender leads 24/7.</p>
+      </div>
+      <div class="rs-card rs-anim">
+        <div class="rs-card-icon">⚡</div>
+        <h3>Velocidad y rendimiento</h3>
+        <p>Código limpio, carga rápida y buena experiencia de usuario. Puntuaciones altas en Core Web Vitals.</p>
+      </div>
+      <div class="rs-card rs-anim">
+        <div class="rs-card-icon">🎯</div>
+        <h3>Optimizada para convertir</h3>
+        <p>Botones, formularios y estructura pensada para conseguir contactos y clientes reales.</p>
+      </div>
+    </div>
+
+    <button class="rs-cta rs-anim" onclick="openWebModal()">✦ Solicitar web a medida</button>
+
+  </div>
+</section>
+
+<!-- ─── MODAL SOLICITAR DEMO ─── -->
+<div class="modal-overlay" id="demoModal" onclick="handleModalClick(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeDemoModal()">✕</button>
+    <div class="badge" style="align-self:flex-start"><div class="badge-dot"></div>Solicitar demo</div>
+    <h3 class="modal-title">Hablemos de<br><em>tu negocio</em></h3>
+    <p class="modal-sub">Te contactamos en menos de 24h para mostrarte la automatización en acción.</p>
+    <form class="modal-form" id="demoForm" onsubmit="submitDemo(event)">
+      <div class="modal-field">
+        <label>Nombre</label>
+        <input type="text" id="demoNombre" placeholder="Tu nombre completo" required />
+      </div>
+      <div class="modal-field">
+        <label>Teléfono</label>
+        <input type="tel" id="demoTelefono" placeholder="+34 612 345 678" required />
+      </div>
+      <button type="submit" class="modal-submit" id="demoSubmitBtn">Enviar solicitud</button>
+    </form>
+    <div class="modal-success" id="demoSuccess">
+      <div class="modal-success-icon">✓</div>
+      <p>¡Recibido!</p>
+      <span>Te contactamos en menos de 24h.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MODAL WEB A MEDIDA ─── -->
+<div class="modal-overlay" id="webModal" onclick="handleWebModalClick(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeWebModal()">✕</button>
+    <div class="badge" style="align-self:flex-start"><div class="badge-dot"></div>Web a medida</div>
+    <h3 class="modal-title">Hablemos de<br><em>tu web</em></h3>
+    <p class="modal-sub">Cuéntanos tu proyecto y te enviamos una propuesta personalizada en menos de 24h.</p>
+    <form class="modal-form" id="webForm" onsubmit="submitWeb(event)">
+      <div class="modal-field">
+        <label>Nombre</label>
+        <input type="text" id="webNombre" placeholder="Tu nombre completo" required />
+      </div>
+      <div class="modal-field">
+        <label>Teléfono</label>
+        <input type="tel" id="webTelefono" placeholder="+34 612 345 678" required />
+      </div>
+      <button type="submit" class="modal-submit" id="webSubmitBtn">Solicitar presupuesto</button>
+    </form>
+    <div class="modal-success" id="webSuccess">
+      <div class="modal-success-icon">✓</div>
+      <p>¡Recibido!</p>
+      <span>Te enviamos una propuesta en menos de 24h.</span>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -580,9 +1225,127 @@ async function send() {
   busy = false;
 }
 
+function openWebModal() {
+  document.getElementById('webModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeWebModal() {
+  document.getElementById('webModal').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => {
+    document.getElementById('webForm').style.display = 'flex';
+    document.getElementById('webSuccess').style.display = 'none';
+    document.getElementById('webNombre').value = '';
+    document.getElementById('webTelefono').value = '';
+    const btn = document.getElementById('webSubmitBtn');
+    btn.textContent = 'Solicitar presupuesto';
+    btn.disabled = false;
+  }, 300);
+}
+
+function handleWebModalClick(e) {
+  if (e.target === document.getElementById('webModal')) closeWebModal();
+}
+
+async function submitWeb(e) {
+  e.preventDefault();
+  const btn = document.getElementById('webSubmitBtn');
+  const nombre = document.getElementById('webNombre').value.trim();
+  const telefono = document.getElementById('webTelefono').value.trim();
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  try {
+    await fetch('https://hook.eu2.make.com/yhpr2rp2su7e658svtkanfv79pqehsfx', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre,
+        telefono,
+        fuente: 'Web a medida',
+        fecha: new Date().toISOString().split('T')[0]
+      })
+    });
+    document.getElementById('webForm').style.display = 'none';
+    document.getElementById('webSuccess').style.display = 'flex';
+  } catch {
+    btn.textContent = 'Solicitar presupuesto';
+    btn.disabled = false;
+    alert('Error al enviar. Inténtalo de nuevo.');
+  }
+}
+
+function openDemoModal() {
+  document.getElementById('demoModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDemoModal() {
+  document.getElementById('demoModal').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => {
+    document.getElementById('demoForm').style.display = 'flex';
+    document.getElementById('demoSuccess').style.display = 'none';
+    document.getElementById('demoNombre').value = '';
+    document.getElementById('demoTelefono').value = '';
+    const btn = document.getElementById('demoSubmitBtn');
+    btn.textContent = 'Enviar solicitud';
+    btn.disabled = false;
+  }, 300);
+}
+
+function handleModalClick(e) {
+  if (e.target === document.getElementById('demoModal')) closeDemoModal();
+}
+
+async function submitDemo(e) {
+  e.preventDefault();
+  const btn = document.getElementById('demoSubmitBtn');
+  const nombre = document.getElementById('demoNombre').value.trim();
+  const telefono = document.getElementById('demoTelefono').value.trim();
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+  try {
+    await fetch('https://hook.eu2.make.com/yhpr2rp2su7e658svtkanfv79pqehsfx', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre,
+        telefono,
+        fuente: 'Chatbot Web',
+        fecha: new Date().toISOString().split('T')[0]
+      })
+    });
+    document.getElementById('demoForm').style.display = 'none';
+    document.getElementById('demoSuccess').style.display = 'flex';
+  } catch {
+    btn.textContent = 'Enviar solicitud';
+    btn.disabled = false;
+    alert('Error al enviar. Inténtalo de nuevo.');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('inp').addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
   reset();
+
+  // Modal
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDemoModal(); closeWebModal(); } });
+
+  // Scroll-in animations for real estate section
+  const rsObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('rs-in');
+        rsObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.rs-anim').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.07}s`;
+    rsObs.observe(el);
+  });
 });
 </script>
 </body>
