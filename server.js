@@ -21,6 +21,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
+// Ruta raíz → sirve la demo directamente
+app.get('/', (_req, res) => {
+  res.sendFile(__dirname + '/maestro-ia-demo.html');
+});
+
 // ── Respuesta de demo cuando no hay API key ──────────────────
 const DEMO_REPLY = '¡Hola! Soy el asistente de demostración de Maestro IA. ' +
   'En este momento estoy en modo visual — para activar las respuestas reales configura la variable OPENAI_API_KEY. ' +
