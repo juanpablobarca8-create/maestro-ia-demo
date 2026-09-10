@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: parsed.data.description }],
     });
-  } catch {
+  } catch (err) {
+    console.error('Anthropic API error in /api/estimate:', err);
     return NextResponse.json({ error: 'No se pudo contactar con la IA' }, { status: 502 });
   }
 
