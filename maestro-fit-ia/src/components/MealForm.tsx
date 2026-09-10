@@ -32,13 +32,17 @@ export function MealForm({ onSubmit, onCancel }: MealFormProps) {
     e.preventDefault();
     setError(null);
 
-    const caloriesNum = Number(calories);
     if (!description.trim()) {
       setError('Describe qué has comido');
       return;
     }
-    if (!Number.isFinite(caloriesNum) || caloriesNum < 0) {
-      setError('Introduce unas calorías válidas');
+    if (calories.trim() === '') {
+      setError('Introduce las calorías');
+      return;
+    }
+    const caloriesNum = Number(calories);
+    if (!Number.isFinite(caloriesNum) || caloriesNum <= 0) {
+      setError('Introduce unas calorías válidas (mayor que 0)');
       return;
     }
 
