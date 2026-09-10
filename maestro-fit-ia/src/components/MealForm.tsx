@@ -48,9 +48,9 @@ export function MealForm({ onSubmit, onCancel }: MealFormProps) {
         throw new Error(data?.error ?? 'No se pudo estimar');
       }
       setCalories(String(Math.round(data.estimate.calories)));
-      setProtein(String(data.estimate.protein_g));
-      setCarbs(String(data.estimate.carbs_g));
-      setFat(String(data.estimate.fat_g));
+      setProtein(String(Math.round(data.estimate.protein_g)));
+      setCarbs(String(Math.round(data.estimate.carbs_g)));
+      setFat(String(Math.round(data.estimate.fat_g)));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo estimar');
     } finally {

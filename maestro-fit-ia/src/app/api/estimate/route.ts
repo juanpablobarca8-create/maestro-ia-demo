@@ -5,8 +5,8 @@ const SYSTEM_PROMPT = `Eres un nutricionista experto. Dado un texto describiendo
 
 Si no se especifican cantidades, asume raciones estándar/promedio para un adulto.
 
-Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional antes ni después, con este formato exacto:
-{"calories": <entero>, "protein_g": <número con 1 decimal>, "carbs_g": <número con 1 decimal>, "fat_g": <número con 1 decimal>}`;
+Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional antes ni después, con este formato exacto (todos los valores como números enteros):
+{"calories": <entero>, "protein_g": <entero>, "carbs_g": <entero>, "fat_g": <entero>}`;
 
 export async function POST(request: NextRequest) {
   if (!process.env.OPENAI_API_KEY) {
