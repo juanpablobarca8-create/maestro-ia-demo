@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { anthropic } from '@/lib/anthropic';
 import { estimateSchema, estimateResultSchema } from '@/lib/validation';
 
 const SYSTEM_PROMPT = `Eres un nutricionista experto. Dado un texto describiendo una comida, estima las calorías totales y los macronutrientes (proteína, hidratos, grasas) en gramos.
@@ -10,9 +9,9 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional antes ni de
 {"calories": <entero>, "protein_g": <número con 1 decimal>, "carbs_g": <número con 1 decimal>, "fat_g": <número con 1 decimal>}`;
 
 export async function POST(request: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json(
-      { error: 'ANTHROPIC_API_KEY no está configurada en el servidor' },
+      { error: 'OPENAI_API_KEY no está configurada en el servidor' },
       { status: 503 }
     );
   }
@@ -32,28 +31,44 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let message;
+  let openaiRes: Response;
   try {
-    message = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 200,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: 'user', content: parsed.data.description }],
+    openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        response_format: { type: 'json_object' },
+        max_tokens: 200,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: parsed.data.description },
+        ],
+      }),
     });
   } catch (err) {
-    console.error('Anthropic API error in /api/estimate:', err);
+    console.error('OpenAI API network error in /api/estimate:', err);
     return NextResponse.json({ error: 'No se pudo contactar con la IA' }, { status: 502 });
   }
 
-  const textBlock = message.content.find((block) => block.type === 'text');
-  if (!textBlock || textBlock.type !== 'text') {
+  if (!openaiRes.ok) {
+    const errBody = await openaiRes.text();
+    console.error('OpenAI API error in /api/estimate:', openaiRes.status, errBody);
+    return NextResponse.json({ error: 'No se pudo contactar con la IA' }, { status: 502 });
+  }
+
+  const completion = await openaiRes.json();
+  const content: string | undefined = completion?.choices?.[0]?.message?.content;
+  if (!content) {
     return NextResponse.json({ error: 'Respuesta de IA vacía' }, { status: 502 });
   }
 
   let rawEstimate: unknown;
   try {
-    const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
-    rawEstimate = JSON.parse(jsonMatch ? jsonMatch[0] : textBlock.text);
+    rawEstimate = JSON.parse(content);
   } catch {
     return NextResponse.json({ error: 'No se pudo interpretar la respuesta de la IA' }, { status: 502 });
   }
