@@ -22,3 +22,14 @@ export const createWeightLogSchema = z.object({
 export const dateQuerySchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, 'Formato de fecha inválido (YYYY-MM-DD)');
+
+export const estimateSchema = z.object({
+  description: z.string().trim().min(1).max(500),
+});
+
+export const estimateResultSchema = z.object({
+  calories: z.number().min(0).max(10000),
+  protein_g: z.number().min(0).max(1000),
+  carbs_g: z.number().min(0).max(1000),
+  fat_g: z.number().min(0).max(1000),
+});

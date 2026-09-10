@@ -26,7 +26,37 @@ export function MealForm({ onSubmit, onCancel }: MealFormProps) {
   const [carbs, setCarbs] = useState('');
   const [fat, setFat] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [estimating, setEstimating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleEstimate = async () => {
+    setError(null);
+    if (!description.trim()) {
+      setError('Escribe primero qué has comido');
+      return;
+    }
+
+    setEstimating(true);
+    try {
+      const res = await fetch('/api/estimate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: description.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error ?? 'No se pudo estimar');
+      }
+      setCalories(String(Math.round(data.estimate.calories)));
+      setProtein(String(data.estimate.protein_g));
+      setCarbs(String(data.estimate.carbs_g));
+      setFat(String(data.estimate.fat_g));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo estimar');
+    } finally {
+      setEstimating(false);
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -96,6 +126,14 @@ export function MealForm({ onSubmit, onCancel }: MealFormProps) {
           className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-3 py-2"
           maxLength={500}
         />
+        <button
+          type="button"
+          onClick={handleEstimate}
+          disabled={estimating || submitting}
+          className="mt-2 text-sm font-medium text-orange-600 hover:text-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {estimating ? 'Estimando...' : '✨ Estimar calorías con IA'}
+        </button>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
