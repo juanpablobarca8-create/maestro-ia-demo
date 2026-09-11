@@ -11,6 +11,7 @@ import { MealList } from '@/components/MealList';
 import { WeightTracker } from '@/components/WeightTracker';
 import { PhotoAnalyzer, type PhotoEstimate } from '@/components/PhotoAnalyzer';
 import { GoalsSettings } from '@/components/GoalsSettings';
+import { WeeklySummary } from '@/components/WeeklySummary';
 
 type PanelMode = 'none' | 'manual' | 'photo' | 'goals';
 
@@ -275,6 +276,8 @@ export default function Home() {
           />
         )}
 
+        <WeeklySummary caloriesGoal={goals.calories} />
+
         <WeightTracker />
 
         <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-card border border-stone-200/70 dark:border-stone-800 p-6">
@@ -290,7 +293,7 @@ export default function Home() {
         </div>
 
         <p className="text-center text-stone-400 dark:text-stone-600 text-xs mt-8">
-          MVP v0.3 — foto + IA, edición, objetivos, peso y contador diario
+          MVP v0.4 — foto + IA, edición, objetivos, resumen semanal y peso
         </p>
       </div>
     </main>
