@@ -33,3 +33,16 @@ export const estimateResultSchema = z.object({
   carbs_g: z.number().min(0).max(1000),
   fat_g: z.number().min(0).max(1000),
 });
+
+export const analyzePhotoSchema = z.object({
+  image: z.string().startsWith('data:image/', 'Debe ser una imagen en base64 (data URL)'),
+});
+
+export const photoEstimateResultSchema = z.object({
+  description: z.string().min(1).max(300),
+  calories: z.number().min(0).max(10000),
+  protein_g: z.number().min(0).max(1000),
+  carbs_g: z.number().min(0).max(1000),
+  fat_g: z.number().min(0).max(1000),
+  question: z.string().max(300).nullable(),
+});

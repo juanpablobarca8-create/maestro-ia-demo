@@ -6,12 +6,17 @@ import { todayLocalISODate, formatDateLong } from '@/lib/dates';
 import { DailyProgress } from '@/components/DailyProgress';
 import { MealForm } from '@/components/MealForm';
 import { MealList } from '@/components/MealList';
+import { WeightTracker } from '@/components/WeightTracker';
+import { PhotoAnalyzer, type PhotoEstimate } from '@/components/PhotoAnalyzer';
+
+type PanelMode = 'none' | 'manual' | 'photo';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
+  const [panel, setPanel] = useState<PanelMode>('none');
+  const [photoEstimate, setPhotoEstimate] = useState<PhotoEstimate | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const today = todayLocalISODate();
@@ -43,11 +48,12 @@ export default function Home() {
     protein_g: number;
     carbs_g: number;
     fat_g: number;
+    source?: 'manual' | 'photo';
   }) => {
     const res = await fetch('/api/meals', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...meal, logged_date: today, source: 'manual' }),
+      body: JSON.stringify({ ...meal, logged_date: today, source: meal.source ?? 'manual' }),
     });
     if (!res.ok) {
       const body = await res.json().catch(() => null);
@@ -55,7 +61,8 @@ export default function Home() {
     }
     const data = await res.json();
     setMeals((prev) => [...prev, data.meal]);
-    setShowForm(false);
+    setPanel('none');
+    setPhotoEstimate(null);
   };
 
   const handleDeleteMeal = async (id: string) => {
@@ -94,15 +101,62 @@ export default function Home() {
 
           <DailyProgress totals={totals} />
 
-          <button
-            onClick={() => setShowForm((v) => !v)}
-            className="w-full mt-6 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-4 rounded-lg transition-all"
-          >
-            {showForm ? 'Cerrar formulario' : '➕ Añadir comida'}
-          </button>
+          <div className="flex gap-3 mt-6">
+            <button
+              onClick={() => {
+                setPhotoEstimate(null);
+                setPanel(panel === 'photo' ? 'none' : 'photo');
+              }}
+              className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-4 rounded-lg transition-all"
+            >
+              📸 Analizar foto
+            </button>
+            <button
+              onClick={() => {
+                setPhotoEstimate(null);
+                setPanel(panel === 'manual' ? 'none' : 'manual');
+              }}
+              className="flex-1 border border-orange-500 text-orange-600 dark:text-orange-400 font-semibold py-3 px-4 rounded-lg transition-all"
+            >
+              {panel === 'manual' ? 'Cerrar' : '➕ Añadir a mano'}
+            </button>
+          </div>
         </div>
 
-        {showForm && <MealForm onSubmit={handleAddMeal} onCancel={() => setShowForm(false)} />}
+        {panel === 'photo' && (
+          <PhotoAnalyzer
+            onAnalyzed={(estimate) => {
+              setPhotoEstimate(estimate);
+              setPanel('manual');
+            }}
+            onCancel={() => setPanel('none')}
+          />
+        )}
+
+        {panel === 'manual' && (
+          <MealForm
+            onSubmit={handleAddMeal}
+            onCancel={() => {
+              setPanel('none');
+              setPhotoEstimate(null);
+            }}
+            initialValues={
+              photoEstimate
+                ? {
+                    description: photoEstimate.description,
+                    calories: photoEstimate.calories,
+                    protein_g: photoEstimate.protein_g,
+                    carbs_g: photoEstimate.carbs_g,
+                    fat_g: photoEstimate.fat_g,
+                  }
+                : undefined
+            }
+            hint={photoEstimate?.question}
+            source={photoEstimate ? 'photo' : 'manual'}
+          />
+        )}
+
+        <WeightTracker />
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Comidas de hoy</h3>
@@ -113,7 +167,7 @@ export default function Home() {
         </div>
 
         <div className="text-center text-slate-500 dark:text-slate-500 text-xs mt-8">
-          <p>MVP v0.1 — entrada manual + contador diario</p>
+          <p>MVP v0.2 — foto + IA, entrada manual, peso y contador diario</p>
         </div>
       </div>
     </main>
