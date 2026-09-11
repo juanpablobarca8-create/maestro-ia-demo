@@ -11,6 +11,7 @@ const inputClass =
 const labelClass = 'block text-xs font-medium text-stone-500 dark:text-stone-400 mb-1.5';
 
 interface MealFormInitialValues {
+  meal_type?: MealType;
   description?: string;
   calories?: number;
   protein_g?: number;
@@ -32,12 +33,22 @@ interface MealFormProps {
   initialValues?: MealFormInitialValues;
   hint?: string | null;
   source?: 'manual' | 'photo';
+  title?: string;
+  submitLabel?: string;
 }
 
 const MEAL_TYPES: MealType[] = ['desayuno', 'comida', 'merienda', 'cena', 'snack'];
 
-export function MealForm({ onSubmit, onCancel, initialValues, hint, source = 'manual' }: MealFormProps) {
-  const [mealType, setMealType] = useState<MealType>('comida');
+export function MealForm({
+  onSubmit,
+  onCancel,
+  initialValues,
+  hint,
+  source = 'manual',
+  title = 'Añadir comida',
+  submitLabel = 'Guardar comida',
+}: MealFormProps) {
+  const [mealType, setMealType] = useState<MealType>(initialValues?.meal_type ?? 'comida');
   const [description, setDescription] = useState(initialValues?.description ?? '');
   const [calories, setCalories] = useState(
     initialValues?.calories != null ? String(Math.round(initialValues.calories)) : ''
@@ -125,7 +136,7 @@ export function MealForm({ onSubmit, onCancel, initialValues, hint, source = 'ma
       onSubmit={handleSubmit}
       className="bg-white dark:bg-stone-900 rounded-2xl shadow-card border border-stone-200/70 dark:border-stone-800 p-6 mb-5 space-y-4"
     >
-      <h3 className="text-sm font-semibold text-stone-900 dark:text-white">Añadir comida</h3>
+      <h3 className="text-sm font-semibold text-stone-900 dark:text-white">{title}</h3>
 
       {hint && (
         <div className="flex gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/60 rounded-xl p-3 text-sm text-amber-800 dark:text-amber-300">
@@ -239,7 +250,7 @@ export function MealForm({ onSubmit, onCancel, initialValues, hint, source = 'ma
           className="flex-1 inline-flex items-center justify-center gap-1.5 bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white text-sm font-semibold py-2.5 px-4 rounded-xl disabled:opacity-50 transition-colors"
         >
           <Check size={16} strokeWidth={2.25} />
-          {submitting ? 'Guardando...' : 'Guardar comida'}
+          {submitting ? 'Guardando...' : submitLabel}
         </button>
       </div>
     </form>

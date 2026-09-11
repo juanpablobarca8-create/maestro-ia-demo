@@ -1,10 +1,16 @@
 'use client';
 
 import { Flame, Dumbbell, Wheat, Droplet } from 'lucide-react';
-import { DAILY_GOALS } from '@/lib/goals';
 import { CircularProgress } from '@/components/CircularProgress';
 
 interface Totals {
+  calories: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+}
+
+interface Goals {
   calories: number;
   protein_g: number;
   carbs_g: number;
@@ -44,19 +50,19 @@ function MacroBar({
   );
 }
 
-export function DailyProgress({ totals }: { totals: Totals }) {
-  const remaining = Math.max(DAILY_GOALS.calories - totals.calories, 0);
+export function DailyProgress({ totals, goals }: { totals: Totals; goals: Goals }) {
+  const remaining = Math.max(goals.calories - totals.calories, 0);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-6">
-        <CircularProgress value={totals.calories} goal={DAILY_GOALS.calories} size={116} strokeWidth={10}>
+        <CircularProgress value={totals.calories} goal={goals.calories} size={116} strokeWidth={10}>
           <div className="flex flex-col items-center">
             <Flame size={18} className="text-brand-600 mb-0.5" strokeWidth={2.25} />
             <span className="text-xl font-bold text-stone-900 dark:text-white leading-none">
               {totals.calories}
             </span>
-            <span className="text-[11px] text-stone-400 dark:text-stone-500 mt-0.5">de {DAILY_GOALS.calories}</span>
+            <span className="text-[11px] text-stone-400 dark:text-stone-500 mt-0.5">de {goals.calories}</span>
           </div>
         </CircularProgress>
 
@@ -64,7 +70,7 @@ export function DailyProgress({ totals }: { totals: Totals }) {
           <p className="text-sm text-stone-500 dark:text-stone-400">Calorías restantes</p>
           <p className="text-2xl font-bold text-stone-900 dark:text-white">{remaining}</p>
           <p className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">
-            {Math.round((totals.calories / DAILY_GOALS.calories) * 100)}% del objetivo diario
+            {Math.round((totals.calories / goals.calories) * 100)}% del objetivo diario
           </p>
         </div>
       </div>
@@ -74,21 +80,21 @@ export function DailyProgress({ totals }: { totals: Totals }) {
           icon={Dumbbell}
           label="Proteína"
           value={totals.protein_g}
-          goal={DAILY_GOALS.protein_g}
+          goal={goals.protein_g}
           colorClass="bg-blue-500"
         />
         <MacroBar
           icon={Wheat}
           label="Hidratos"
           value={totals.carbs_g}
-          goal={DAILY_GOALS.carbs_g}
+          goal={goals.carbs_g}
           colorClass="bg-amber-500"
         />
         <MacroBar
           icon={Droplet}
           label="Grasas"
           value={totals.fat_g}
-          goal={DAILY_GOALS.fat_g}
+          goal={goals.fat_g}
           colorClass="bg-emerald-500"
         />
       </div>

@@ -1,5 +1,5 @@
-// MVP: objetivos fijos hasta que exista pantalla de perfil/onboarding.
-export const DAILY_GOALS = {
+// Fallback used until the profile loads (or if the user has none saved yet).
+export const DEFAULT_GOALS = {
   calories: 2250,
   protein_g: 160,
   carbs_g: 220,
