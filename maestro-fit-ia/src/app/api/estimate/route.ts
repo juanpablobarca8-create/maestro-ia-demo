@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAuthedUser } from '@/lib/auth';
 import { estimateSchema, estimateResultSchema } from '@/lib/validation';
 
 const SYSTEM_PROMPT = `Eres un nutricionista experto. Dado un texto describiendo una comida, estima las calorías totales y los macronutrientes (proteína, hidratos, grasas) en gramos.
@@ -9,6 +10,11 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional antes ni de
 {"calories": <entero>, "protein_g": <entero>, "carbs_g": <entero>, "fat_g": <entero>}`;
 
 export async function POST(request: NextRequest) {
+  const { user } = await getAuthedUser();
+  if (!user) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+  }
+
   if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json(
       { error: 'OPENAI_API_KEY no está configurada en el servidor' },

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { supabaseServer, DEFAULT_USER_ID } from '@/lib/supabase-server';
+import { getAuthedUser } from '@/lib/auth';
 import { updateMealSchema } from '@/lib/validation';
 
 const idSchema = z.string().uuid();
@@ -9,6 +9,11 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { supabase, user } = await getAuthedUser();
+  if (!user) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+  }
+
   const { id } = await params;
   const parsedId = idSchema.safeParse(id);
   if (!parsedId.success) {
@@ -30,11 +35,11 @@ export async function PATCH(
     );
   }
 
-  const { data, error } = await supabaseServer
+  const { data, error } = await supabase
     .from('meals')
     .update(parsed.data)
     .eq('id', parsedId.data)
-    .eq('user_id', DEFAULT_USER_ID)
+    .eq('user_id', user.id)
     .select()
     .single();
 
@@ -49,6 +54,11 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const { supabase, user } = await getAuthedUser();
+  if (!user) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+  }
+
   const { id } = await params;
   const parsedId = idSchema.safeParse(id);
 
@@ -56,11 +66,11 @@ export async function DELETE(
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
   }
 
-  const { error } = await supabaseServer
+  const { error } = await supabase
     .from('meals')
     .delete()
     .eq('id', parsedId.data)
-    .eq('user_id', DEFAULT_USER_ID);
+    .eq('user_id', user.id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

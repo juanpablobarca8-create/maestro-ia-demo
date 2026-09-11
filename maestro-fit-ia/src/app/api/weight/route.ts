@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseServer, DEFAULT_USER_ID } from '@/lib/supabase-server';
+import { getAuthedUser } from '@/lib/auth';
 import { createWeightLogSchema } from '@/lib/validation';
 
 export async function GET(request: NextRequest) {
+  const { supabase, user } = await getAuthedUser();
+  if (!user) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+  }
+
   const limitParam = request.nextUrl.searchParams.get('limit');
   const limit = Math.min(Math.max(Number(limitParam) || 30, 1), 365);
 
-  const { data, error } = await supabaseServer
+  const { data, error } = await supabase
     .from('weight_logs')
     .select('*')
-    .eq('user_id', DEFAULT_USER_ID)
+    .eq('user_id', user.id)
     .order('logged_date', { ascending: false })
     .limit(limit);
 
@@ -21,6 +26,11 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const { supabase, user } = await getAuthedUser();
+  if (!user) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -36,10 +46,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { data, error } = await supabaseServer
+  const { data, error } = await supabase
     .from('weight_logs')
     .upsert(
-      { ...parsed.data, user_id: DEFAULT_USER_ID },
+      { ...parsed.data, user_id: user.id },
       { onConflict: 'user_id,logged_date' }
     )
     .select()

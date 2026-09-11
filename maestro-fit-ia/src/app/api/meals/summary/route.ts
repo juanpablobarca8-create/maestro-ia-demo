@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseServer, DEFAULT_USER_ID } from '@/lib/supabase-server';
+import { getAuthedUser } from '@/lib/auth';
 import { dateQuerySchema } from '@/lib/validation';
 
 export async function GET(request: NextRequest) {
+  const { supabase, user } = await getAuthedUser();
+  if (!user) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+  }
+
   const from = request.nextUrl.searchParams.get('from');
   const to = request.nextUrl.searchParams.get('to');
   const parsedFrom = dateQuerySchema.safeParse(from);
@@ -15,10 +20,10 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const { data, error } = await supabaseServer
+  const { data, error } = await supabase
     .from('meals')
     .select('logged_date, calories, protein_g, carbs_g, fat_g')
-    .eq('user_id', DEFAULT_USER_ID)
+    .eq('user_id', user.id)
     .gte('logged_date', parsedFrom.data)
     .lte('logged_date', parsedTo.data);
 

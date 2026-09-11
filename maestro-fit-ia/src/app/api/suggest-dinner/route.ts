@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAuthedUser } from '@/lib/auth';
 import { suggestDinnerSchema, dinnerSuggestionResultSchema } from '@/lib/validation';
 
 const SYSTEM_PROMPT = `Eres un nutricionista práctico ayudando a alguien a decidir qué cenar en España.
@@ -11,6 +12,11 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional, con este f
 {"suggestion": "<una frase o dos, tono cercano y directo, en español>"}`;
 
 export async function POST(request: NextRequest) {
+  const { user } = await getAuthedUser();
+  if (!user) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+  }
+
   if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json(
       { error: 'OPENAI_API_KEY no está configurada en el servidor' },

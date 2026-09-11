@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseServer, DEFAULT_USER_ID } from '@/lib/supabase-server';
+import { getAuthedUser } from '@/lib/auth';
 import { createMealSchema, dateQuerySchema } from '@/lib/validation';
 
 export async function GET(request: NextRequest) {
+  const { supabase, user } = await getAuthedUser();
+  if (!user) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+  }
+
   const dateParam = request.nextUrl.searchParams.get('date');
   const parsedDate = dateQuerySchema.safeParse(dateParam);
 
@@ -13,10 +18,10 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const { data, error } = await supabaseServer
+  const { data, error } = await supabase
     .from('meals')
     .select('*')
-    .eq('user_id', DEFAULT_USER_ID)
+    .eq('user_id', user.id)
     .eq('logged_date', parsedDate.data)
     .order('created_at', { ascending: true });
 
@@ -28,6 +33,11 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const { supabase, user } = await getAuthedUser();
+  if (!user) {
+    return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -43,9 +53,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { data, error } = await supabaseServer
+  const { data, error } = await supabase
     .from('meals')
-    .insert({ ...parsed.data, user_id: DEFAULT_USER_ID })
+    .insert({ ...parsed.data, user_id: user.id })
     .select()
     .single();
 

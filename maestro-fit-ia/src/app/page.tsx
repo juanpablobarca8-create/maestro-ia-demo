@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Flame, Camera, Plus, X, Settings } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Flame, Camera, Plus, X, Settings, LogOut } from 'lucide-react';
 import type { Meal, MealType } from '@/lib/database.types';
 import { todayLocalISODate, formatDateLong } from '@/lib/dates';
 import { DEFAULT_GOALS } from '@/lib/goals';
+import { createClient } from '@/lib/supabase/client';
 import { DailyProgress } from '@/components/DailyProgress';
 import { MealForm } from '@/components/MealForm';
 import { MealList } from '@/components/MealList';
@@ -24,6 +26,7 @@ interface Goals {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -158,6 +161,13 @@ export default function Home() {
     setPanel('none');
   };
 
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  };
+
   if (!mounted) return null;
 
   const totals = meals.reduce(
@@ -194,6 +204,13 @@ export default function Home() {
             className="flex items-center justify-center w-9 h-9 rounded-xl text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
           >
             <Settings size={18} strokeWidth={2.25} />
+          </button>
+          <button
+            onClick={handleLogout}
+            aria-label="Cerrar sesión"
+            className="flex items-center justify-center w-9 h-9 rounded-xl text-stone-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+          >
+            <LogOut size={18} strokeWidth={2.25} />
           </button>
         </header>
 
@@ -303,7 +320,7 @@ export default function Home() {
         </div>
 
         <p className="text-center text-stone-400 dark:text-stone-600 text-xs mt-8">
-          MVP v0.5 — foto + IA, edición, objetivos, sugerencia de cena, resumen semanal y peso
+          v0.6 — multi-usuario, foto + IA, sugerencia de cena, resumen semanal y peso
         </p>
       </div>
     </main>
