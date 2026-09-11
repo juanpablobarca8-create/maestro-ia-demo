@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { Flame, Camera, Plus, X } from 'lucide-react';
 import type { Meal, MealType } from '@/lib/database.types';
 import { todayLocalISODate, formatDateLong } from '@/lib/dates';
 import { DailyProgress } from '@/components/DailyProgress';
@@ -87,38 +88,54 @@ export default function Home() {
   );
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <div className="container mx-auto max-w-md px-4 py-8">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">🔥 Maestro Fit IA</h1>
-          <p className="text-slate-600 dark:text-slate-400">Tu asistente de calorías inteligente</p>
-        </div>
+    <main className="min-h-screen bg-stone-50 dark:bg-stone-950">
+      <div className="mx-auto max-w-md px-4 py-8 sm:py-10">
+        <header className="flex items-center gap-2.5 mb-7">
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-600 text-white shrink-0">
+            <Flame size={20} strokeWidth={2.5} />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold text-stone-900 dark:text-white leading-tight">Maestro Fit IA</h1>
+            <p className="text-xs text-stone-500 dark:text-stone-400">Tu asistente de calorías</p>
+          </div>
+        </header>
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6">
-          <h2 className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-4">
+        <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-card border border-stone-200/70 dark:border-stone-800 p-6 mb-5">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-stone-400 dark:text-stone-500 mb-5">
             Hoy — {formatDateLong(today)}
           </h2>
 
           <DailyProgress totals={totals} />
 
-          <div className="flex gap-3 mt-6">
+          <div className="flex gap-2.5 mt-6">
             <button
               onClick={() => {
                 setPhotoEstimate(null);
                 setPanel(panel === 'photo' ? 'none' : 'photo');
               }}
-              className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-4 rounded-lg transition-all"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white text-sm font-semibold py-2.5 px-4 rounded-xl transition-colors"
             >
-              📸 Analizar foto
+              <Camera size={16} strokeWidth={2.25} />
+              Analizar foto
             </button>
             <button
               onClick={() => {
                 setPhotoEstimate(null);
                 setPanel(panel === 'manual' ? 'none' : 'manual');
               }}
-              className="flex-1 border border-orange-500 text-orange-600 dark:text-orange-400 font-semibold py-3 px-4 rounded-lg transition-all"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 text-sm font-semibold py-2.5 px-4 rounded-xl transition-colors"
             >
-              {panel === 'manual' ? 'Cerrar' : '➕ Añadir a mano'}
+              {panel === 'manual' ? (
+                <>
+                  <X size={16} strokeWidth={2.25} />
+                  Cerrar
+                </>
+              ) : (
+                <>
+                  <Plus size={16} strokeWidth={2.25} />
+                  Añadir a mano
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -158,17 +175,19 @@ export default function Home() {
 
         <WeightTracker />
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Comidas de hoy</h3>
+        <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-card border border-stone-200/70 dark:border-stone-800 p-6">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-stone-400 dark:text-stone-500 mb-4">
+            Comidas de hoy
+          </h3>
 
-          {loading && <p className="text-slate-500 dark:text-slate-400 text-sm">Cargando...</p>}
-          {loadError && <p className="text-red-600 text-sm">{loadError}</p>}
+          {loading && <p className="text-stone-500 dark:text-stone-400 text-sm">Cargando...</p>}
+          {loadError && <p className="text-red-600 dark:text-red-400 text-sm">{loadError}</p>}
           {!loading && !loadError && <MealList meals={meals} onDelete={handleDeleteMeal} />}
         </div>
 
-        <div className="text-center text-slate-500 dark:text-slate-500 text-xs mt-8">
-          <p>MVP v0.2 — foto + IA, entrada manual, peso y contador diario</p>
-        </div>
+        <p className="text-center text-stone-400 dark:text-stone-600 text-xs mt-8">
+          MVP v0.2 — foto + IA, entrada manual, peso y contador diario
+        </p>
       </div>
     </main>
   );

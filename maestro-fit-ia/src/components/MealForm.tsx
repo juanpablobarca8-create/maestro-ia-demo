@@ -1,8 +1,14 @@
 'use client';
 
 import { useState, FormEvent } from 'react';
+import { Sparkles, X, Check, HelpCircle } from 'lucide-react';
 import type { MealType } from '@/lib/database.types';
 import { MEAL_TYPE_LABELS } from '@/lib/goals';
+
+const inputClass =
+  'w-full rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-white px-3.5 py-2.5 text-sm placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-colors';
+
+const labelClass = 'block text-xs font-medium text-stone-500 dark:text-stone-400 mb-1.5';
 
 interface MealFormInitialValues {
   description?: string;
@@ -115,23 +121,25 @@ export function MealForm({ onSubmit, onCancel, initialValues, hint, source = 'ma
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 mb-6 space-y-4">
-      <h3 className="text-lg font-bold text-slate-900 dark:text-white">Añadir comida</h3>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white dark:bg-stone-900 rounded-2xl shadow-card border border-stone-200/70 dark:border-stone-800 p-6 mb-5 space-y-4"
+    >
+      <h3 className="text-sm font-semibold text-stone-900 dark:text-white">Añadir comida</h3>
 
       {hint && (
-        <div className="bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 text-sm text-amber-800 dark:text-amber-200">
-          🤔 {hint}
+        <div className="flex gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/60 rounded-xl p-3 text-sm text-amber-800 dark:text-amber-300">
+          <HelpCircle size={16} className="shrink-0 mt-0.5" strokeWidth={2.25} />
+          <span>{hint}</span>
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-          Tipo de comida
-        </label>
+        <label className={labelClass}>Tipo de comida</label>
         <select
           value={mealType}
           onChange={(e) => setMealType(e.target.value as MealType)}
-          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-3 py-2"
+          className={inputClass}
         >
           {MEAL_TYPES.map((type) => (
             <option key={type} value={type}>
@@ -142,102 +150,95 @@ export function MealForm({ onSubmit, onCancel, initialValues, hint, source = 'ma
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-          Qué has comido
-        </label>
+        <label className={labelClass}>Qué has comido</label>
         <input
           type="text"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="2 huevos, tostada integral y Danone +Proteína"
-          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-3 py-2"
+          className={inputClass}
           maxLength={500}
         />
         <button
           type="button"
           onClick={handleEstimate}
           disabled={estimating || submitting}
-          className="mt-2 text-sm font-medium text-orange-600 hover:text-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {estimating ? 'Estimando...' : '✨ Estimar calorías con IA'}
+          <Sparkles size={14} strokeWidth={2.25} />
+          {estimating ? 'Estimando...' : 'Estimar calorías con IA'}
         </button>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-            Calorías
-          </label>
+          <label className={labelClass}>Calorías</label>
           <input
             type="number"
             inputMode="numeric"
             value={calories}
             onChange={(e) => setCalories(e.target.value)}
             placeholder="450"
-            className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-3 py-2"
+            className={inputClass}
             min={0}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-            Proteína (g)
-          </label>
+          <label className={labelClass}>Proteína (g)</label>
           <input
             type="number"
             inputMode="numeric"
             value={protein}
             onChange={(e) => setProtein(e.target.value)}
             placeholder="30"
-            className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-3 py-2"
+            className={inputClass}
             min={0}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-            Hidratos (g)
-          </label>
+          <label className={labelClass}>Hidratos (g)</label>
           <input
             type="number"
             inputMode="numeric"
             value={carbs}
             onChange={(e) => setCarbs(e.target.value)}
             placeholder="40"
-            className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-3 py-2"
+            className={inputClass}
             min={0}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-            Grasas (g)
-          </label>
+          <label className={labelClass}>Grasas (g)</label>
           <input
             type="number"
             inputMode="numeric"
             value={fat}
             onChange={(e) => setFat(e.target.value)}
             placeholder="15"
-            className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white px-3 py-2"
+            className={inputClass}
             min={0}
           />
         </div>
       </div>
 
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      {error && <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
 
-      <div className="flex gap-3">
+      <div className="flex gap-2.5 pt-1">
         <button
           type="button"
           onClick={onCancel}
           disabled={submitting}
-          className="flex-1 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-semibold py-2 px-4 rounded-lg"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 text-sm font-semibold py-2.5 px-4 rounded-xl transition-colors"
         >
+          <X size={16} strokeWidth={2.25} />
           Cancelar
         </button>
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-2 px-4 rounded-lg disabled:opacity-50"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-brand-600 hover:bg-brand-700 active:bg-brand-800 text-white text-sm font-semibold py-2.5 px-4 rounded-xl disabled:opacity-50 transition-colors"
         >
+          <Check size={16} strokeWidth={2.25} />
           {submitting ? 'Guardando...' : 'Guardar comida'}
         </button>
       </div>
