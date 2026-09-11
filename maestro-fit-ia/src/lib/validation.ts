@@ -62,3 +62,14 @@ export const updateProfileSchema = z.object({
   daily_carbs_goal: z.number().int().min(0).max(1000),
   daily_fat_goal: z.number().int().min(0).max(1000),
 });
+
+export const suggestDinnerSchema = z.object({
+  remaining_calories: z.number().int().min(-10000).max(10000),
+  remaining_protein_g: z.number().min(-1000).max(1000),
+  remaining_carbs_g: z.number().min(-1000).max(1000),
+  remaining_fat_g: z.number().min(-1000).max(1000),
+});
+
+export const dinnerSuggestionResultSchema = z.object({
+  suggestion: z.string().min(1).max(500),
+});

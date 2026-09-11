@@ -12,6 +12,7 @@ import { WeightTracker } from '@/components/WeightTracker';
 import { PhotoAnalyzer, type PhotoEstimate } from '@/components/PhotoAnalyzer';
 import { GoalsSettings } from '@/components/GoalsSettings';
 import { WeeklySummary } from '@/components/WeeklySummary';
+import { DinnerSuggestion } from '@/components/DinnerSuggestion';
 
 type PanelMode = 'none' | 'manual' | 'photo' | 'goals';
 
@@ -169,6 +170,13 @@ export default function Home() {
     { calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0 }
   );
 
+  const remaining = {
+    calories: goals.calories - totals.calories,
+    protein_g: goals.protein_g - totals.protein_g,
+    carbs_g: goals.carbs_g - totals.carbs_g,
+    fat_g: goals.fat_g - totals.fat_g,
+  };
+
   return (
     <main className="min-h-screen bg-stone-50 dark:bg-stone-950">
       <div className="mx-auto max-w-md px-4 py-8 sm:py-10">
@@ -276,6 +284,8 @@ export default function Home() {
           />
         )}
 
+        <DinnerSuggestion remaining={remaining} />
+
         <WeeklySummary caloriesGoal={goals.calories} />
 
         <WeightTracker />
@@ -293,7 +303,7 @@ export default function Home() {
         </div>
 
         <p className="text-center text-stone-400 dark:text-stone-600 text-xs mt-8">
-          MVP v0.4 — foto + IA, edición, objetivos, resumen semanal y peso
+          MVP v0.5 — foto + IA, edición, objetivos, sugerencia de cena, resumen semanal y peso
         </p>
       </div>
     </main>
