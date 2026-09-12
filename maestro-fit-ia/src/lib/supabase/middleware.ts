@@ -5,9 +5,24 @@ import type { Database } from '@/lib/database.types';
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    return NextResponse.json(
+      {
+        debug: 'middleware env check',
+        hasUrl: Boolean(url),
+        hasKey: Boolean(key),
+        urlLength: url?.length ?? 0,
+        keyLength: key?.length ?? 0,
+      },
+      { status: 500 }
+    );
+  }
+
   const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    key,
     {
       cookies: {
         getAll() {
